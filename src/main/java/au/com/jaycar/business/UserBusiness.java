@@ -7,5 +7,9 @@ import au.com.jaycar.dto.UserDetailsDto;
 public interface UserBusiness {
 	
 	List<UserDetailsDto> listAllUsers();
+	
+	UserDetailsDto findUser(final String email);
+	
+	void deleteUser(final String email);
 
 }

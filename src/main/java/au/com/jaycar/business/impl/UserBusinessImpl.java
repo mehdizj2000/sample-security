@@ -1,6 +1,7 @@
 package au.com.jaycar.business.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
@@ -17,21 +18,30 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class UserBusinessImpl implements UserBusiness {
 
-	private final UserInfoRepo userInfoRepo;
-	
-	private final UserInfoMapper userInfoMapper;
+    private final UserInfoRepo userInfoRepo;
 
-	@Override
-	public List<UserDetailsDto> listAllUsers() {
+    private final UserInfoMapper userInfoMapper;
 
-		List<UserInfo> userInfos = userInfoRepo.findAll();
+    @Override
+    public List<UserDetailsDto> listAllUsers() {
+	List<UserInfo> userInfos = userInfoRepo.findAll();
+	List<UserDetailsDto> listAllUsers = userInfoMapper.toUserDtoList(userInfos);
+	log.info("{}", listAllUsers);
+	return listAllUsers;
+    }
 
-		List<UserDetailsDto> listAllUsers = userInfoMapper.toUserDtoList(userInfos);
-		
-		log.info("{}",listAllUsers);
-		return listAllUsers;
-		
-	}
+    @Override
+    public UserDetailsDto findUser(final String email) {
+	Optional<UserInfo> optionalUserInfo = userInfoRepo.findByEmail(email);
+	UserInfo userInfo = optionalUserInfo.orElseThrow(RuntimeException::new);
+	return userInfoMapper.toUserDto(userInfo);
+    }
 
+    @Override
+    public void deleteUser(final String email) {
+	Optional<UserInfo> optionalUserInfo = userInfoRepo.findByEmail(email);
+	UserInfo userInfo = optionalUserInfo.orElseThrow(RuntimeException::new);
+	userInfoRepo.delete(userInfo);
+    }
 
 }

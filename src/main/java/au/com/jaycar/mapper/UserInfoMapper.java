@@ -10,10 +10,10 @@ import au.com.jaycar.dto.UserDetailsDto;
 @Mapper(componentModel = "spring")
 public interface UserInfoMapper {
 
-	UserDetailsDto toUserDto(UserInfo userInfo);
-	
-	UserInfo toUserEntity(UserDetailsDto detailsDto);
-	
-	List<UserDetailsDto> toUserDtoList(List<UserInfo> userInfos);
+    UserDetailsDto toUserDto(UserInfo userInfo);
+
+    UserInfo toUserEntity(UserDetailsDto detailsDto);
+
+    List<UserDetailsDto> toUserDtoList(List<UserInfo> userInfos);
 
 }

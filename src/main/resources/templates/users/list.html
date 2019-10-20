@@ -18,13 +18,15 @@
 						<tr>
 							<th scope="col">user name</th>
 							<th scope="col">email</th>
+							<th scope="col">creat date</th>
 							<th scope="col">enabled</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="user : ${users}">
-							<td th:text="${user.userName}"></td>
+							<td><a th:text="${user.userName}" th:href="@{'/users/' + ${user.email}}">email</a></td>
 							<td th:text="${user.email}"></td>
+							<td th:text="${#temporals.format(user.timeCreated, 'dd-MM-yyyy HH:mm:ss z')}"></td>
 							<td th:text="${user.userEnabled}"></td>
 						</tr>
 					</tbody>
