@@ -17,16 +17,23 @@
 		<dl>
 			<dt>Email</dt>
 			<dd id="email" th:text="${user.email}">123</dd>
-			<dt>Date</dt>
-			<dd id="created" th:text="${#temporals.format(user.timeCreated, 'dd-MM-yyyy HH:mm:ss z')}">July
+			<dt>User Name</dt>
+			<dd id="email" th:text="${user.userName}">123</dd>
+			<dt>Status</dt>
+			<dd id="email" th:text="${user.userEnabled}">123</dd>
+			<dt>Create Date</dt>
+			<dd id="created"
+				th:text="${#temporals.format(user.timeCreated, 'dd-MM-yyyy HH:mm:ss z')}">July
 				11, 2012 2:17:16 PM CDT</dd>
+			<dt>password</dt>
+			<dd id="password" th:text="${user.password}"></dd>
 			<!-- <dt>Email</dt>
 			<dd id="email" th:text="${user.email}">Email</dd> -->
 		</dl>
 		<div class="pull-left">
-			<a href="users" th:href="@{'/users/delete/' + ${user.email}}"> delete
-			</a> | <a href="form.html" th:href="@{'/user/modify/' + ${user.email}}">
-				modify </a>
+			<a href="users" th:href="@{'/users/delete/' + ${user.email}}">
+				delete </a> | <a href="form.html"
+				th:href="@{'/users/modify/' + ${user.email}}"> modify </a>
 		</div>
 	</div>
 </body>

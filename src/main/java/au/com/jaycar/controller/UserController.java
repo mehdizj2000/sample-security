@@ -23,47 +23,50 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserBusiness userBusiness;
+	private final UserBusiness userBusiness;
 
-    @GetMapping("/list")
-    public String listUsers(Model model) {
+	@GetMapping("/list")
+	public String listUsers(Model model) {
 
-	List<UserDetailsDto> detailsDtos = userBusiness.listAllUsers();
+		List<UserDetailsDto> detailsDtos = userBusiness.listAllUsers();
 
-	log.info("retreived users: {}", detailsDtos);
+		log.info("retreived users: {}", detailsDtos);
 
-	model.addAttribute("users", detailsDtos);
+		model.addAttribute("users", detailsDtos);
 
-	return "users/list";
-    }
+		return "users/list";
+	}
 
-    @GetMapping("/{email}")
-    public String userDetails(@PathVariable(name = "email") String email, Model model) {
-	UserDetailsDto detailsDto = userBusiness.findUser(email);
+	@GetMapping("/{email}")
+	public String userDetails(@PathVariable(name = "email") String email, Model model) {
+		UserDetailsDto detailsDto = userBusiness.findUser(email);
 
-	model.addAttribute("user", detailsDto);
+		model.addAttribute("user", detailsDto);
 
-	return "users/view";
+		return "users/view";
 
-    }
+	}
 
-    @GetMapping("/delete/{email}")
-    public String deleteUser(@PathVariable String email) {
+	@GetMapping("/delete/{email}")
+	public String deleteUser(@PathVariable String email) {
 
-	userBusiness.deleteUser(email);
+		userBusiness.deleteUser(email);
 
-	return "redirect:/users/list";
-    }
+		return "redirect:/users/list";
+	}
 
-    @GetMapping("/modify/{email}")
-    public String modifyUser(@PathVariable String email) {
+	@GetMapping("/modify/{email}")
+	public String modifyUser(@PathVariable String email, Model model) {
+		UserDetailsDto detailsDto = userBusiness.findUser(email);
+		
+		model.addAttribute("user", detailsDto);
+		return "users/update";
+	}
 
-	return "users/update";
-    }
-
-    @PostMapping("/create")
-    public String createNewUser(@RequestParam @Valid UserDetailsDto detailsDto, Model model) {
-	return "redirect:/users/list";
-    }
+	@PostMapping("/modify/{email}")
+	public String createNewUser(@PathVariable String email, UserDetailsDto user) {
+		userBusiness.updateUser(email, user);
+		return "redirect:/users/list";
+	}
 
 }

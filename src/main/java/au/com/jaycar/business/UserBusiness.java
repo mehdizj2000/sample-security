@@ -11,5 +11,7 @@ public interface UserBusiness {
 	UserDetailsDto findUser(final String email);
 	
 	void deleteUser(final String email);
+	
+	void updateUser(final String email, UserDetailsDto user);
 
 }

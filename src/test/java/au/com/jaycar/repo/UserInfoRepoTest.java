@@ -15,9 +15,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import au.com.jaycar.domain.UserInfo;
+import au.com.jaycar.dto.UserDetailsDto;
+import au.com.jaycar.mapper.UserInfoMapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -28,6 +31,9 @@ public class UserInfoRepoTest {
 	@Autowired
 	private UserInfoRepo userInfoRepo;
 
+	@Autowired
+	private UserInfoMapper userInfoMapper;
+
 	@Test
 	public void findAllUsersTest() {
 		List<UserInfo> infos = userInfoRepo.findAll();
@@ -36,9 +42,6 @@ public class UserInfoRepoTest {
 
 	@Test
 	public void findAllUsersAndSaveTest() {
-//		List<UserInfo> infos = userInfoRepo.findAll();
-//		assertNotNull(infos);
-//		assertThat(infos, Matchers.empty());
 
 		List<UserInfo> infos = new ArrayList<UserInfo>();
 		for (int i = 0; i < 20; i++) {
@@ -55,29 +58,55 @@ public class UserInfoRepoTest {
 		log.info("savedUI.toString(): {}", savedUI);
 
 	}
-	
+
 	@Test
 	public void savePartialUserTest() {
 		Optional<UserInfo> userInfo = userInfoRepo.findByEmail("IoOFrdyv@shaga.com");
-		if(userInfo.isPresent()) {
+		if (userInfo.isPresent()) {
 			UserInfo info = userInfo.get();
 			assertNotNull(info);
 			log.info("wkerufksdfjgksdjfhgksfjg: {}", info);
-			
+
 			info.setPassword("sjfbhjshfjshjsdfhjhf");
 			info.setUserEnabled(true);
 			UserInfo savedInfo = userInfoRepo.save(info);
 			log.info("UserInfo savedInfo: {}", savedInfo);
 		}
-		
-		
-			
+
 	}
 
 	@Test
-	@Ignore
-	public void testFindByEmail() {
-		fail("Not yet implemented");
+	public void testUpdateUser() {
+
+		String email = "aFRrtUWY@shaga.com";
+
+//		'5', 'aFRrtUWY@shaga.com', 'password', '2019-10-21 00:03:24', NULL, '0', 'aFRrtUWY'
+
+		UserDetailsDto detailsDto = new UserDetailsDto();
+		detailsDto.setId(5l);
+		detailsDto.setEmail("aFRrtUWY@shaga.com");
+		detailsDto.setUserName("Mehdi");
+		detailsDto.setPassword("dfgdfgdfgdfg");
+		detailsDto.setConfirmPassword("garage");
+//		detailsDto.setUserEnabled(false);
+
+		UserInfo info = userInfoMapper.toUserEntity(detailsDto);
+
+		Optional<UserInfo> userOpt = userInfoRepo.findByEmail(email);
+
+		UserInfo info2 = userOpt.get();
+
+		if (info.getUserEnabled() != null)
+			info2.setUserEnabled(info.getUserEnabled());
+		if (info.getPassword() != null)
+			info2.setPassword(info.getPassword());
+		if(info.getUserName() != null)
+			info2.setUserName(info.getUserName());
+
+		UserInfo piyaz = userInfoRepo.save(info2);
+
+		System.out.println(piyaz);
+
 	}
 
 	@Test

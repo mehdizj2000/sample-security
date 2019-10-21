@@ -11,10 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import lombok.Data;
 
 @Entity
 @Data
+//@DynamicUpdate
 public class UserInfo {
 
 	@Id
@@ -39,6 +42,7 @@ public class UserInfo {
 
 	@PrePersist
 	void prePersist() {
+		userEnabled = false;
 		timeCreated = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC"));
 	}
 

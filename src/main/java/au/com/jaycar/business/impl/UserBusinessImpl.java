@@ -18,30 +18,47 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class UserBusinessImpl implements UserBusiness {
 
-    private final UserInfoRepo userInfoRepo;
+	private final UserInfoRepo userInfoRepo;
 
-    private final UserInfoMapper userInfoMapper;
+	private final UserInfoMapper userInfoMapper;
 
-    @Override
-    public List<UserDetailsDto> listAllUsers() {
-	List<UserInfo> userInfos = userInfoRepo.findAll();
-	List<UserDetailsDto> listAllUsers = userInfoMapper.toUserDtoList(userInfos);
-	log.info("{}", listAllUsers);
-	return listAllUsers;
-    }
+	@Override
+	public List<UserDetailsDto> listAllUsers() {
+		List<UserInfo> userInfos = userInfoRepo.findAll();
+		List<UserDetailsDto> listAllUsers = userInfoMapper.toUserDtoList(userInfos);
+		log.info("{}", listAllUsers);
+		return listAllUsers;
+	}
 
-    @Override
-    public UserDetailsDto findUser(final String email) {
-	Optional<UserInfo> optionalUserInfo = userInfoRepo.findByEmail(email);
-	UserInfo userInfo = optionalUserInfo.orElseThrow(RuntimeException::new);
-	return userInfoMapper.toUserDto(userInfo);
-    }
+	@Override
+	public UserDetailsDto findUser(final String email) {
+		Optional<UserInfo> optionalUserInfo = userInfoRepo.findByEmail(email);
+		UserInfo userInfo = optionalUserInfo.orElseThrow(RuntimeException::new);
+		return userInfoMapper.toUserDto(userInfo);
+	}
 
-    @Override
-    public void deleteUser(final String email) {
-	Optional<UserInfo> optionalUserInfo = userInfoRepo.findByEmail(email);
-	UserInfo userInfo = optionalUserInfo.orElseThrow(RuntimeException::new);
-	userInfoRepo.delete(userInfo);
-    }
+	@Override
+	public void deleteUser(final String email) {
+		Optional<UserInfo> optionalUserInfo = userInfoRepo.findByEmail(email);
+		UserInfo userInfo = optionalUserInfo.orElseThrow(RuntimeException::new);
+		userInfoRepo.delete(userInfo);
+	}
+
+	@Override
+	public void updateUser(final String email, UserDetailsDto user) {
+		Optional<UserInfo> optionalUserInfo = userInfoRepo.findByEmail(email);
+		UserInfo userInfo = optionalUserInfo.orElseThrow(RuntimeException::new);
+
+		UserInfo userInfo2 = userInfoMapper.toUserEntity(user);
+
+		if (userInfo2.getUserEnabled() != null)
+			userInfo.setUserEnabled(userInfo2.getUserEnabled());
+		if (userInfo2.getPassword() != null)
+			userInfo.setPassword(userInfo2.getPassword());
+		if (userInfo2.getUserName() != null)
+			userInfo.setUserName(userInfo2.getUserName());
+
+		userInfoRepo.save(userInfo);
+	}
 
 }
