@@ -31,22 +31,20 @@ public class UserBusinessImpl implements UserBusiness {
 	}
 
 	@Override
-	public UserDetailsDto findUser(final String email) {
-		Optional<UserInfo> optionalUserInfo = userInfoRepo.findByEmail(email);
+	public UserDetailsDto findUser(final Long id) {
+		Optional<UserInfo> optionalUserInfo = userInfoRepo.findById(id);
 		UserInfo userInfo = optionalUserInfo.orElseThrow(RuntimeException::new);
 		return userInfoMapper.toUserDto(userInfo);
 	}
 
 	@Override
-	public void deleteUser(final String email) {
-		Optional<UserInfo> optionalUserInfo = userInfoRepo.findByEmail(email);
-		UserInfo userInfo = optionalUserInfo.orElseThrow(RuntimeException::new);
-		userInfoRepo.delete(userInfo);
+	public void deleteUser(final Long id) {
+		userInfoRepo.deleteById(id);
 	}
 
 	@Override
-	public void updateUser(final String email, UserDetailsDto user) {
-		Optional<UserInfo> optionalUserInfo = userInfoRepo.findByEmail(email);
+	public void updateUser(final Long id, UserDetailsDto user) {
+		Optional<UserInfo> optionalUserInfo = userInfoRepo.findById(id);
 		UserInfo userInfo = optionalUserInfo.orElseThrow(RuntimeException::new);
 
 		UserInfo userInfo2 = userInfoMapper.toUserEntity(user);
@@ -59,6 +57,14 @@ public class UserBusinessImpl implements UserBusiness {
 			userInfo.setUserName(userInfo2.getUserName());
 
 		userInfoRepo.save(userInfo);
+	}
+	
+	@Override
+	public void saveNewUser(UserDetailsDto user) {
+		
+		UserInfo userInfo2 = userInfoMapper.toUserEntity(user);
+
+		userInfoRepo.save(userInfo2);
 	}
 
 }

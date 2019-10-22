@@ -8,10 +8,12 @@ public interface UserBusiness {
 	
 	List<UserDetailsDto> listAllUsers();
 	
-	UserDetailsDto findUser(final String email);
+	UserDetailsDto findUser(final Long id);
 	
-	void deleteUser(final String email);
+	void deleteUser(final Long id);
 	
-	void updateUser(final String email, UserDetailsDto user);
+	void updateUser(final Long id, UserDetailsDto user);
+	
+	void saveNewUser(UserDetailsDto user);
 
 }

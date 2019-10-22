@@ -15,6 +15,8 @@
 			<a th:href="@{/users/list}" href="list.html"> Users </a>
 		</div>
 		<dl>
+			<dt>ID</dt>
+			<dd id="id" th:text="${user.id}">123</dd>
 			<dt>Email</dt>
 			<dd id="email" th:text="${user.email}">123</dd>
 			<dt>User Name</dt>
@@ -31,9 +33,9 @@
 			<dd id="email" th:text="${user.email}">Email</dd> -->
 		</dl>
 		<div class="pull-left">
-			<a href="users" th:href="@{'/users/delete/' + ${user.email}}">
+			<a href="users" th:href="@{/users/delete/__${user.id}__}">
 				delete </a> | <a href="form.html"
-				th:href="@{'/users/modify/' + ${user.email}}"> modify </a>
+				th:href="@{/users/modify/__${user.id}__}"> modify </a>
 		</div>
 	</div>
 </body>

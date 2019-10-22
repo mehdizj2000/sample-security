@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
-import org.hibernate.annotations.DynamicUpdate;
-
 import lombok.Data;
 
 @Entity

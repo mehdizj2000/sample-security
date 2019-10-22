@@ -15,7 +15,7 @@
 			<a th:href="@{/users/list}" href="list.html"> Users </a>
 		</div>
 		<form id="updateForm" th:object="${user}"
-			th:action="@{/users/modify/__*{email}__}" action="#" method="post">
+			th:action="@{/users/save/__*{id}__}" action="#" method="post">
 
 			<input type="hidden" th:field="*{id}"
 				th:class="${#fields.hasErrors('id')} ? 'field-error'" />
