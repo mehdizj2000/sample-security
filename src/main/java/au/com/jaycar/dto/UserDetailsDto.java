@@ -6,9 +6,11 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Null;
 
+import au.com.jaycar.validation.annotation.PasswordMatcher;
 import lombok.Data;
 
 @Data
+@PasswordMatcher
 public class UserDetailsDto {
 	
 	private Long id;

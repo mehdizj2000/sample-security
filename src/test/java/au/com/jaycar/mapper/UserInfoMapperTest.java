@@ -1,6 +1,6 @@
 package au.com.jaycar.mapper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
