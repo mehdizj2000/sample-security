@@ -43,28 +43,27 @@ public class UserBusinessImpl implements UserBusiness {
 	}
 
 	@Override
-	public void updateUser(final Long id, UserDetailsDto user) {
-		Optional<UserInfo> optionalUserInfo = userInfoRepo.findById(id);
-		UserInfo userInfo = optionalUserInfo.orElseThrow(RuntimeException::new);
+	public UserDetailsDto saveUser(UserDetailsDto user) {
+		if (user.getId() != null && user.getId().intValue() != 0) {
+			Optional<UserInfo> optionalUserInfo = userInfoRepo.findById(user.getId());
+			UserInfo userInfo = optionalUserInfo.orElseThrow(RuntimeException::new);
 
-		UserInfo userInfo2 = userInfoMapper.toUserEntity(user);
+			UserInfo userInfo2 = userInfoMapper.toUserEntity(user);
 
-		if (userInfo2.getUserEnabled() != null)
-			userInfo.setUserEnabled(userInfo2.getUserEnabled());
-		if (userInfo2.getPassword() != null)
-			userInfo.setPassword(userInfo2.getPassword());
-		if (userInfo2.getUserName() != null)
-			userInfo.setUserName(userInfo2.getUserName());
+			if (userInfo2.getUserEnabled() != null)
+				userInfo.setUserEnabled(userInfo2.getUserEnabled());
+			if (userInfo2.getPassword() != null)
+				userInfo.setPassword(userInfo2.getPassword());
+			if (userInfo2.getUserName() != null)
+				userInfo.setUserName(userInfo2.getUserName());
+			UserInfo info = userInfoRepo.save(userInfo);
+			return userInfoMapper.toUserDto(info);
+		} else {
+			UserInfo userInfo2 = userInfoMapper.toUserEntity(user);
 
-		userInfoRepo.save(userInfo);
-	}
-	
-	@Override
-	public void saveNewUser(UserDetailsDto user) {
-		
-		UserInfo userInfo2 = userInfoMapper.toUserEntity(user);
-
-		userInfoRepo.save(userInfo2);
+			UserInfo info = userInfoRepo.save(userInfo2);
+			return userInfoMapper.toUserDto(info);
+		}
 	}
 
 }

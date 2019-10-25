@@ -2,12 +2,18 @@ package au.com.jaycar.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import au.com.jaycar.business.UserBusiness;
 import au.com.jaycar.dto.UserDetailsDto;
@@ -51,22 +57,31 @@ public class UserController {
 	}
 
 	@GetMapping("/new")
-	public String newUser(Model model) {
-		UserDetailsDto detailsDto = new UserDetailsDto();
-		detailsDto.setId(-1l);
-		model.addAttribute("user", detailsDto);
+	public String newUser(@ModelAttribute(value = "user") final UserDetailsDto user) {
+		return "users/userform";
+	}
+	
+	@GetMapping("/save")
+	public String save(@ModelAttribute(value = "user") final UserDetailsDto user) {
 		return "users/userform";
 	}
 
-	@PostMapping("/save/{id}")
-	public String createNewUser(@PathVariable Long id, UserDetailsDto user) {
-		if (id != -1) {
-			userBusiness.updateUser(id, user);
-		} else {
-			user.setId(null);
-			userBusiness.saveNewUser(user);
+	@PostMapping("/save")
+	public String createNewUser(@ModelAttribute(value = "user") @Valid UserDetailsDto user, BindingResult result,
+			RedirectAttributes redirectAttributes) {
+
+		if (result.hasErrors()) {
+			return "users/userform";
 		}
-		return "redirect:/users/list";
+
+		if (user.getId() == null) {
+			redirectAttributes.addFlashAttribute("globalMessage", "Successfully created a new user");
+		} else {
+			redirectAttributes.addFlashAttribute("globalMessage", "Successfully updated a new user");
+		}
+		UserDetailsDto detailsDto = userBusiness.saveUser(user);
+
+		return "redirect:/users/" + detailsDto.getId();
 	}
 
 }

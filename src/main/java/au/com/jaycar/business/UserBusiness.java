@@ -12,8 +12,6 @@ public interface UserBusiness {
 	
 	void deleteUser(final Long id);
 	
-	void updateUser(final Long id, UserDetailsDto user);
-	
-	void saveNewUser(UserDetailsDto user);
+	UserDetailsDto saveUser(UserDetailsDto user);
 
 }

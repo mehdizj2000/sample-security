@@ -9,69 +9,52 @@
 <body>
 	<h1 layout:fragment="header">User Details</h1>
 	<div layout:fragment="content" class="container">
-		<div class="alert alert-success" th:if="${globalMessage}"
-			th:text="${globalMessage}">Some Success message</div>
-		<div class="pull-right">
-			<a th:href="@{/users/list}" href="list.html"> Users </a>
-		</div>
-		<form id="updateForm" th:object="${user}"
-			th:action="@{/users/save/__*{id}__}" action="#" method="post">
 
-			<input type="hidden" th:field="*{id}"
-				th:class="${#fields.hasErrors('id')} ? 'field-error'" />
-			<div class="form-group">
+		<form id="updateForm" th:object="${user}" th:action="@{/users/save}"
+			action="#" method="post">
+			<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+				<p th:each="error : ${#fields.errors('*')}" th:text="${error}">Validation
+					error</p>
+			</div>
+			<div class="pull-right">
+				<a th:href="@{/users/list}" href="list.html"> Users </a>
+			</div>
+			<input type="hidden" th:field="*{id}" />
+			<div class="form-group"
+				th:classappend="${#fields.hasErrors('email')} ? 'has-error'">
 				<label class="control-label col-xs-3" for="email">Email:</label>
 				<div class="col-xs-9">
-					<input type="text" th:field="*{email}"
-						th:class="${#fields.hasErrors('email')} ? 'field-error'" />
+					<input type="text" th:field="*{email}" class="form-control" />
 				</div>
 			</div>
-			<div class="form-group">
+			<div class="form-group"
+				th:classappend="${#fields.hasErrors('userName')} ? 'has-error'">
 				<label class="control-label col-xs-3" for="userName">User
 					Name:</label>
 				<div class="col-xs-9">
-					<input type="text" th:field="*{userName}"
-						th:class="${#fields.hasErrors('userName')} ? 'field-error'" />
+					<input type="text" th:field="*{userName}" class="form-control" />
 				</div>
 			</div>
-			<div class="form-group">
+			<div class="form-group"
+				th:classappend="${#fields.hasErrors('password')} ? 'has-error'">
 				<label class="control-label col-xs-3" for="password">Password:</label>
 				<div class="col-xs-9">
-					<input type="text" th:field="*{password}"
-						th:class="${#fields.hasErrors('password')} ? 'field-error'" />
+					<input type="password" th:field="*{password}" class="form-control" />
 				</div>
 			</div>
-			<div class="form-group">
+			<div class="form-group"
+				th:classappend="${#fields.hasErrors('confirmPassword')} ? 'has-error'">
 				<label class="control-label col-xs-3" for="confirmPassword">Password
 					Confirmation:</label>
 				<div class="col-xs-9">
-					<input type="text" th:field="*{confirmPassword}"
-						th:class="${#fields.hasErrors('confirmPassword')} ? 'field-error'" />
+					<input type="password" th:field="*{confirmPassword}"
+						class="form-control" />
 				</div>
 			</div>
 
-			<div class="form-actions col-xs-offset-3 col-xs-9" >
-				<input type="submit" class="btn btn-primary" value="Update" />
+			<div class="form-actions col-xs-offset-3 col-xs-9">
+				<input type="submit" class="btn btn-primary" value="Save" />
 			</div>
-			<!-- <dl>
-				<dt>Email</dt>
-				<dd id="email" th:text="${user.email}">123</dd>
-				<dt>User Name</dt>
-				<dd id="email" th:text="${user.userName}">123</dd>
-				<dt>Status</dt>
-				<dd id="email" th:text="${user.userEnabled}">123</dd>
-				<dt>Date</dt>
-				<dd id="created"
-					th:text="${#temporals.format(user.timeCreated, 'dd-MM-yyyy HH:mm:ss z')}">July
-					11, 2012 2:17:16 PM CDT</dd>
-				<dt>Email</dt>
-			<dd id="email" th:text="${user.email}">Email</dd>
-			</dl>
-			<div class="pull-left">
-				<a href="users" th:href="@{'/users/delete/' + ${user.email}}">
-					delete </a> | <a href="form.html"
-					th:href="@{'/user/modify/' + ${user.email}}"> modify </a>
-			</div> -->
 		</form>
 	</div>
 </body>
