@@ -22,8 +22,10 @@
 							<th scope="col">ID</th>
 							<th scope="col">User Name</th>
 							<th scope="col">Email</th>
-							<th scope="col">Password</th>
+							<th scope="col">First Name</th>
+							<th scope="col">Last Name</th>
 							<th scope="col">Created Date</th>
+							<th scope="col">Password</th>
 							<th scope="col">Enabled</th>
 						</tr>
 					</thead>
@@ -32,6 +34,8 @@
 							<td th:text="${user.id}"></td>
 							<td><a th:text="${user.userName}" th:href="@{/users/__${user.id}__}">email</a></td>
 							<td th:text="${user.email}"></td>
+							<td th:text="${user.firstName}"></td>
+							<td th:text="${user.lastName}"></td>
 							<td th:text="${#temporals.format(user.timeCreated, 'dd-MM-yyyy HH:mm:ss z')}"></td>
 							<td th:text="${user.password}"></td>
 							<td th:text="${user.userEnabled}"></td>

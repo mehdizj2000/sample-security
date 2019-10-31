@@ -25,6 +25,10 @@ public class UserInfo {
 	@Column(unique = true, nullable = false)
 	private String userName;
 
+	private String firstName;
+
+	private String lastName;
+
 	@Column(unique = true, updatable = false, nullable = false)
 //	@Email
 	private String email;
