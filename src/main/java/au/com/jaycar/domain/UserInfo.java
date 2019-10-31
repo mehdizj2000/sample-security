@@ -15,7 +15,6 @@ import lombok.Data;
 
 @Entity
 @Data
-//@DynamicUpdate
 public class UserInfo {
 
 	@Id
@@ -30,7 +29,6 @@ public class UserInfo {
 	private String lastName;
 
 	@Column(unique = true, updatable = false, nullable = false)
-//	@Email
 	private String email;
 
 	private String password;
