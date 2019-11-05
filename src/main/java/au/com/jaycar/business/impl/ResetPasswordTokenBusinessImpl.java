@@ -9,45 +9,45 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import au.com.jaycar.business.TokenBusiness;
+import au.com.jaycar.domain.ResetPasswordToken;
 import au.com.jaycar.domain.UserInfo;
-import au.com.jaycar.domain.VerificationToken;
 import au.com.jaycar.dto.UserDetailsDto;
 import au.com.jaycar.exception.TokenVerificationException;
 import au.com.jaycar.mapper.UserInfoMapper;
+import au.com.jaycar.repo.ResetPasswordTokenRepo;
 import au.com.jaycar.repo.UserInfoRepo;
-import au.com.jaycar.repo.VerificationTokenRepo;
 
 @Component
-public class VerificationTokenBusinessImpl implements TokenBusiness<VerificationToken> {
+public class ResetPasswordTokenBusinessImpl implements TokenBusiness<ResetPasswordToken> {
 
-	private VerificationTokenRepo verificationTokenRepo;
+	private ResetPasswordTokenRepo resetPasswordTokenRepo;
 
 	private UserInfoRepo userInfoRepo;
 
 	private UserInfoMapper userInfoMapper;
 
 	@Override
-	public VerificationToken createToken(UserInfo userInfo) {
-		VerificationToken verificationToken = new VerificationToken();
-		verificationToken.setToken(UUID.randomUUID().toString());
-		verificationToken.setUserInfo(userInfo);
-		return verificationTokenRepo.save(verificationToken);
+	public ResetPasswordToken createToken(UserInfo userInfo) {
+		ResetPasswordToken resetPasswordToken = new ResetPasswordToken();
+		resetPasswordToken.setToken(UUID.randomUUID().toString());
+		resetPasswordToken.setUserInfo(userInfo);
+		return getResetPasswordTokenRepo().save(resetPasswordToken);
 	}
 
 	@Override
 	public UserDetailsDto verifyToken(String token) {
-		Optional<VerificationToken> verificationTokenOpt = verificationTokenRepo.findByToken(token);
-		verificationTokenOpt.orElseThrow(TokenVerificationException::new);
+		Optional<ResetPasswordToken> resetPasswordTokenOpt = getResetPasswordTokenRepo().findByToken(token);
+		resetPasswordTokenOpt.orElseThrow(TokenVerificationException::new);
 
-		VerificationToken verificationToken = verificationTokenOpt.get();
+		ResetPasswordToken resetPasswordToken = resetPasswordTokenOpt.get();
 
 		ZonedDateTime zonedDateTime = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC"));
-		boolean notExpired = verificationToken.getExpiryDate().withZoneSameInstant(ZoneId.of("UTC"))
+		boolean notExpired = resetPasswordToken.getExpiryDate().withZoneSameInstant(ZoneId.of("UTC"))
 				.isAfter(zonedDateTime);
 
 		if (notExpired) {
 
-			UserInfo userInfo = verificationToken.getUserInfo();
+			UserInfo userInfo = resetPasswordToken.getUserInfo();
 
 			userInfo.setUserEnabled(Boolean.TRUE);
 
@@ -56,15 +56,6 @@ public class VerificationTokenBusinessImpl implements TokenBusiness<Verification
 		} else
 			throw new TokenVerificationException();
 
-	}
-
-	public VerificationTokenRepo getVerificationTokenRepo() {
-		return verificationTokenRepo;
-	}
-
-	@Autowired
-	public void setVerificationTokenRepo(VerificationTokenRepo verificationTokenRepo) {
-		this.verificationTokenRepo = verificationTokenRepo;
 	}
 
 	public UserInfoRepo getUserInfoRepo() {
@@ -83,6 +74,14 @@ public class VerificationTokenBusinessImpl implements TokenBusiness<Verification
 	@Autowired
 	public void setUserInfoMapper(UserInfoMapper userInfoMapper) {
 		this.userInfoMapper = userInfoMapper;
+	}
+
+	public ResetPasswordTokenRepo getResetPasswordTokenRepo() {
+		return resetPasswordTokenRepo;
+	}
+
+	public void setResetPasswordTokenRepo(ResetPasswordTokenRepo resetPasswordTokenRepo) {
+		this.resetPasswordTokenRepo = resetPasswordTokenRepo;
 	}
 
 }

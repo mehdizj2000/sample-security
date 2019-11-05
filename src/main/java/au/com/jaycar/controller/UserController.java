@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import au.com.jaycar.business.UserBusiness;
-import au.com.jaycar.business.VerificationTokenBusiness;
+import au.com.jaycar.domain.VerificationToken;
+import au.com.jaycar.business.TokenBusiness;
 import au.com.jaycar.dto.UserDetailsDto;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +28,7 @@ public class UserController {
 
 	private UserBusiness userBusiness;
 
-	private VerificationTokenBusiness verificationTokenBusiness;
+	private TokenBusiness<VerificationToken> verificationTokenBusiness;
 
 	@GetMapping("/list")
 	public String listUsers(Model model) {
@@ -69,7 +70,7 @@ public class UserController {
 
 	@GetMapping("/registration/confirm/{token}")
 	public String register(@PathVariable String token) {
-		UserDetailsDto detailsDto = verificationTokenBusiness.verifyToken(token);
+		UserDetailsDto detailsDto = getVerificationTokenBusiness().verifyToken(token);
 		return "redirect:/users/" + detailsDto.getId();
 	}
 
@@ -100,12 +101,12 @@ public class UserController {
 		this.userBusiness = userBusiness;
 	}
 
-	public VerificationTokenBusiness getVerificationTokenBusiness() {
+	public TokenBusiness<VerificationToken> getVerificationTokenBusiness() {
 		return verificationTokenBusiness;
 	}
 
 	@Autowired
-	public void setVerificationTokenBusiness(VerificationTokenBusiness verificationTokenBusiness) {
+	public void setVerificationTokenBusiness(TokenBusiness<VerificationToken> verificationTokenBusiness) {
 		this.verificationTokenBusiness = verificationTokenBusiness;
 	}
 

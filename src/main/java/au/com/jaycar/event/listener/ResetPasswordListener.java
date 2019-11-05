@@ -7,39 +7,40 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import au.com.jaycar.business.TokenBusiness;
+import au.com.jaycar.domain.ResetPasswordToken;
 import au.com.jaycar.domain.UserInfo;
-import au.com.jaycar.domain.VerificationToken;
-import au.com.jaycar.event.RegistrationEvent;
+import au.com.jaycar.event.ResetPasswordEvent;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class RegistrationListener implements ApplicationListener<RegistrationEvent> {
+public class ResetPasswordListener implements ApplicationListener<ResetPasswordEvent> {
 
-	private TokenBusiness<VerificationToken> verificationTokenBusiness;
+	private TokenBusiness<ResetPasswordToken> resetPasswordTokenBusiness;
 
 	private JavaMailSender mailSender;
 
 	@Override
-	public void onApplicationEvent(RegistrationEvent event) {
+	public void onApplicationEvent(ResetPasswordEvent event) {
 
 		log.info("Within Listener");
 		UserInfo userInfo = event.getUserInfo();
 
-		VerificationToken verificationToken = getVerificationTokenBusiness().createToken(userInfo);
+		ResetPasswordToken resetPasswordToken = resetPasswordTokenBusiness.createToken(userInfo);
 
 		String url = event.getUrl();
 
-		url += "/users/registration/confirm/" + verificationToken.getToken();
+		url += "/users/password/reset/confirm/" + resetPasswordToken.getToken();
 
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
 		mailMessage.setTo(userInfo.getEmail());
-		mailMessage.setSubject("registration confirmation");
+		mailMessage.setSubject("reset password confirmation");
 		mailMessage.setText(url);
 		mailMessage.setFrom("zareimeh@gmail.com");
 
 		mailSender.send(mailMessage);
 	}
+
 
 	public JavaMailSender getMailSender() {
 		return mailSender;
@@ -50,13 +51,14 @@ public class RegistrationListener implements ApplicationListener<RegistrationEve
 		this.mailSender = mailSender;
 	}
 
-	public TokenBusiness<VerificationToken> getVerificationTokenBusiness() {
-		return verificationTokenBusiness;
+
+	public TokenBusiness<ResetPasswordToken> getResetPasswordTokenBusiness() {
+		return resetPasswordTokenBusiness;
 	}
 
 	@Autowired
-	public void setVerificationTokenBusiness(TokenBusiness<VerificationToken> verificationTokenBusiness) {
-		this.verificationTokenBusiness = verificationTokenBusiness;
+	public void setResetPasswordTokenBusiness(TokenBusiness<ResetPasswordToken> resetPasswordTokenBusiness) {
+		this.resetPasswordTokenBusiness = resetPasswordTokenBusiness;
 	}
 
 }
