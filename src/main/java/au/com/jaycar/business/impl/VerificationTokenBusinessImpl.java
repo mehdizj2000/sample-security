@@ -43,7 +43,7 @@ public class VerificationTokenBusinessImpl implements TokenBusiness<Verification
 
 		ZonedDateTime zonedDateTime = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC"));
 		boolean notExpired = verificationToken.getExpiryDate().withZoneSameInstant(ZoneId.of("UTC"))
-				.isAfter(zonedDateTime);
+				.isBefore(zonedDateTime);
 
 		if (notExpired) {
 
