@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,21 +16,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import au.com.jaycar.business.UserBusiness;
+import au.com.jaycar.business.VerificationTokenBusiness;
 import au.com.jaycar.dto.UserDetailsDto;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor
 @Controller
 @RequestMapping("/users")
 public class UserController {
 
-	private final UserBusiness userBusiness;
+	private UserBusiness userBusiness;
+
+	private VerificationTokenBusiness verificationTokenBusiness;
 
 	@GetMapping("/list")
 	public String listUsers(Model model) {
-		List<UserDetailsDto> detailsDtos = userBusiness.listAllUsers();
+		List<UserDetailsDto> detailsDtos = getUserBusiness().listAllUsers();
 		log.info("retreived users: {}", detailsDtos);
 		model.addAttribute("users", detailsDtos);
 		return "users/list";
@@ -37,20 +39,20 @@ public class UserController {
 
 	@GetMapping("/{id}")
 	public String userDetails(@PathVariable(name = "id") Long id, Model model) {
-		UserDetailsDto detailsDto = userBusiness.findUser(id);
+		UserDetailsDto detailsDto = getUserBusiness().findUser(id);
 		model.addAttribute("user", detailsDto);
 		return "users/view";
 	}
 
 	@GetMapping("/delete/{id}")
 	public String deleteUser(@PathVariable Long id) {
-		userBusiness.deleteUser(id);
+		getUserBusiness().deleteUser(id);
 		return "redirect:/users/list";
 	}
 
 	@GetMapping("/modify/{id}")
 	public String modifyUser(@PathVariable Long id, Model model) {
-		UserDetailsDto detailsDto = userBusiness.findUser(id);
+		UserDetailsDto detailsDto = getUserBusiness().findUser(id);
 		model.addAttribute("user", detailsDto);
 		return "users/userform";
 	}
@@ -59,10 +61,16 @@ public class UserController {
 	public String newUser(@ModelAttribute(value = "user") final UserDetailsDto user) {
 		return "users/userform";
 	}
-	
+
 	@GetMapping("/save")
 	public String save(@ModelAttribute(value = "user") final UserDetailsDto user) {
 		return "users/userform";
+	}
+
+	@GetMapping("/registration/confirm/{token}")
+	public String register(@PathVariable String token) {
+		UserDetailsDto detailsDto = verificationTokenBusiness.verifyToken(token);
+		return "redirect:/users/" + detailsDto.getId();
 	}
 
 	@PostMapping("/save")
@@ -78,9 +86,27 @@ public class UserController {
 		} else {
 			redirectAttributes.addFlashAttribute("globalMessage", "Successfully updated a new user");
 		}
-		UserDetailsDto detailsDto = userBusiness.saveUser(user);
+		UserDetailsDto detailsDto = getUserBusiness().saveUser(user);
 
 		return "redirect:/users/" + detailsDto.getId();
+	}
+
+	public UserBusiness getUserBusiness() {
+		return userBusiness;
+	}
+
+	@Autowired
+	public void setUserBusiness(UserBusiness userBusiness) {
+		this.userBusiness = userBusiness;
+	}
+
+	public VerificationTokenBusiness getVerificationTokenBusiness() {
+		return verificationTokenBusiness;
+	}
+
+	@Autowired
+	public void setVerificationTokenBusiness(VerificationTokenBusiness verificationTokenBusiness) {
+		this.verificationTokenBusiness = verificationTokenBusiness;
 	}
 
 }

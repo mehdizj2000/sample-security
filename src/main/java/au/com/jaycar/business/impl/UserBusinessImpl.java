@@ -13,7 +13,6 @@ import au.com.jaycar.dto.UserDetailsDto;
 import au.com.jaycar.event.RegistrationEvent;
 import au.com.jaycar.mapper.UserInfoMapper;
 import au.com.jaycar.repo.UserInfoRepo;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

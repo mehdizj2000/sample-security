@@ -10,7 +10,9 @@ import au.com.jaycar.business.VerificationTokenBusiness;
 import au.com.jaycar.domain.UserInfo;
 import au.com.jaycar.domain.VerificationToken;
 import au.com.jaycar.event.RegistrationEvent;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class RegistrationListener implements ApplicationListener<RegistrationEvent> {
 
@@ -21,13 +23,14 @@ public class RegistrationListener implements ApplicationListener<RegistrationEve
 	@Override
 	public void onApplicationEvent(RegistrationEvent event) {
 
+		log.info("Within Listener");
 		UserInfo userInfo = event.getUserInfo();
 
 		VerificationToken verificationToken = verificationTokenBusiness.createToken(userInfo);
 
 		String url = event.getUrl();
-		
-		url += "/users/registration/confrirm?token="+verificationToken.getToken();
+
+		url += "/users/registration/confirm/" + verificationToken.getToken();
 
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
 		mailMessage.setTo(userInfo.getEmail());
