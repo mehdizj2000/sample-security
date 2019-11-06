@@ -34,6 +34,32 @@ public class ResetPasswordTokenBusinessImpl implements TokenBusiness<ResetPasswo
 		return getResetPasswordTokenRepo().save(resetPasswordToken);
 	}
 
+	public ResetPasswordTokenRepo getResetPasswordTokenRepo() {
+		return resetPasswordTokenRepo;
+	}
+
+	public UserInfoMapper getUserInfoMapper() {
+		return userInfoMapper;
+	}
+
+	public UserInfoRepo getUserInfoRepo() {
+		return userInfoRepo;
+	}
+
+	public void setResetPasswordTokenRepo(ResetPasswordTokenRepo resetPasswordTokenRepo) {
+		this.resetPasswordTokenRepo = resetPasswordTokenRepo;
+	}
+
+	@Autowired
+	public void setUserInfoMapper(UserInfoMapper userInfoMapper) {
+		this.userInfoMapper = userInfoMapper;
+	}
+
+	@Autowired
+	public void setUserInfoRepo(UserInfoRepo userInfoRepo) {
+		this.userInfoRepo = userInfoRepo;
+	}
+
 	@Override
 	public UserDetailsDto verifyToken(String token) {
 		Optional<ResetPasswordToken> resetPasswordTokenOpt = getResetPasswordTokenRepo().findByToken(token);
@@ -56,32 +82,6 @@ public class ResetPasswordTokenBusinessImpl implements TokenBusiness<ResetPasswo
 		} else
 			throw new TokenVerificationException();
 
-	}
-
-	public UserInfoRepo getUserInfoRepo() {
-		return userInfoRepo;
-	}
-
-	@Autowired
-	public void setUserInfoRepo(UserInfoRepo userInfoRepo) {
-		this.userInfoRepo = userInfoRepo;
-	}
-
-	public UserInfoMapper getUserInfoMapper() {
-		return userInfoMapper;
-	}
-
-	@Autowired
-	public void setUserInfoMapper(UserInfoMapper userInfoMapper) {
-		this.userInfoMapper = userInfoMapper;
-	}
-
-	public ResetPasswordTokenRepo getResetPasswordTokenRepo() {
-		return resetPasswordTokenRepo;
-	}
-
-	public void setResetPasswordTokenRepo(ResetPasswordTokenRepo resetPasswordTokenRepo) {
-		this.resetPasswordTokenRepo = resetPasswordTokenRepo;
 	}
 
 }

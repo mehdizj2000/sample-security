@@ -17,9 +17,9 @@ import au.com.jaycar.validation.PasswordMatcherValidator;
 @Documented
 public @interface PasswordMatcher {
 
-	String message() default "Passwords do not match";
-
 	Class<?>[] groups() default {};
+
+	String message() default "Passwords do not match";
 
 	Class<? extends Payload>[] payload() default {};
 

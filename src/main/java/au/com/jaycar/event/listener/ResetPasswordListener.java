@@ -20,6 +20,14 @@ public class ResetPasswordListener implements ApplicationListener<ResetPasswordE
 
 	private JavaMailSender mailSender;
 
+	public JavaMailSender getMailSender() {
+		return mailSender;
+	}
+
+	public TokenBusiness<ResetPasswordToken> getResetPasswordTokenBusiness() {
+		return resetPasswordTokenBusiness;
+	}
+
 	@Override
 	public void onApplicationEvent(ResetPasswordEvent event) {
 
@@ -41,19 +49,9 @@ public class ResetPasswordListener implements ApplicationListener<ResetPasswordE
 		mailSender.send(mailMessage);
 	}
 
-
-	public JavaMailSender getMailSender() {
-		return mailSender;
-	}
-
 	@Autowired
 	public void setMailSender(JavaMailSender mailSender) {
 		this.mailSender = mailSender;
-	}
-
-
-	public TokenBusiness<ResetPasswordToken> getResetPasswordTokenBusiness() {
-		return resetPasswordTokenBusiness;
 	}
 
 	@Autowired

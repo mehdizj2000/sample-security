@@ -17,9 +17,9 @@ public class UserInfoMapperTest {
 
 	@Test
 	public void test() {
-		
+
 		UserInfoMapper infoMapper = Mappers.getMapper(UserInfoMapper.class);
-		
+
 		UserInfo userInfo = new UserInfo();
 		userInfo.setEmail("sjfgjsdfgjhfg@jhcjh.com");
 		userInfo.setId(2l);
@@ -28,12 +28,11 @@ public class UserInfoMapperTest {
 		userInfo.setUserName("sdrugfjsghfjksgh");
 		userInfo.setTimeCreated(ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC")));
 		userInfo.setTimeUpdated(ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC")));
-		
-		
+
 		UserDetailsDto detailsDto = infoMapper.toUserDto(userInfo);
-		
+
 		assertNotNull(detailsDto);
-		
+
 		log.info(detailsDto.toString());
 //		fail("Not yet implemented");
 	}

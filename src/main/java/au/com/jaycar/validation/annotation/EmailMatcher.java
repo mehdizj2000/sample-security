@@ -17,9 +17,9 @@ import au.com.jaycar.validation.EmailMatcherValidator;
 @Documented
 public @interface EmailMatcher {
 
-	String message() default "Emails do not match";
-
 	Class<?>[] groups() default {};
+
+	String message() default "Emails do not match";
 
 	Class<? extends Payload>[] payload() default {};
 

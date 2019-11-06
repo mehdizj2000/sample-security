@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 @Entity
 public class VerificationToken {
-	
+
 	private static final int EXPIRATION = 24;
 
 	@Id
@@ -28,12 +28,12 @@ public class VerificationToken {
 	private UserInfo userInfo;
 
 	private ZonedDateTime expiryDate;
-	
+
 	@PrePersist
 	void preCreate() {
-		
+
 		expiryDate = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC")).plusMinutes(EXPIRATION);
-		
+
 	}
 
 }

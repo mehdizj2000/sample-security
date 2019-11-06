@@ -34,6 +34,33 @@ public class VerificationTokenBusinessImpl implements TokenBusiness<Verification
 		return verificationTokenRepo.save(verificationToken);
 	}
 
+	public UserInfoMapper getUserInfoMapper() {
+		return userInfoMapper;
+	}
+
+	public UserInfoRepo getUserInfoRepo() {
+		return userInfoRepo;
+	}
+
+	public VerificationTokenRepo getVerificationTokenRepo() {
+		return verificationTokenRepo;
+	}
+
+	@Autowired
+	public void setUserInfoMapper(UserInfoMapper userInfoMapper) {
+		this.userInfoMapper = userInfoMapper;
+	}
+
+	@Autowired
+	public void setUserInfoRepo(UserInfoRepo userInfoRepo) {
+		this.userInfoRepo = userInfoRepo;
+	}
+
+	@Autowired
+	public void setVerificationTokenRepo(VerificationTokenRepo verificationTokenRepo) {
+		this.verificationTokenRepo = verificationTokenRepo;
+	}
+
 	@Override
 	public UserDetailsDto verifyToken(String token) {
 		Optional<VerificationToken> verificationTokenOpt = verificationTokenRepo.findByToken(token);
@@ -43,7 +70,7 @@ public class VerificationTokenBusinessImpl implements TokenBusiness<Verification
 
 		ZonedDateTime zonedDateTime = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC"));
 		boolean notExpired = verificationToken.getExpiryDate().withZoneSameInstant(ZoneId.of("UTC"))
-				.isBefore(zonedDateTime);
+				.isAfter(zonedDateTime);
 
 		if (notExpired) {
 
@@ -56,33 +83,6 @@ public class VerificationTokenBusinessImpl implements TokenBusiness<Verification
 		} else
 			throw new TokenVerificationException();
 
-	}
-
-	public VerificationTokenRepo getVerificationTokenRepo() {
-		return verificationTokenRepo;
-	}
-
-	@Autowired
-	public void setVerificationTokenRepo(VerificationTokenRepo verificationTokenRepo) {
-		this.verificationTokenRepo = verificationTokenRepo;
-	}
-
-	public UserInfoRepo getUserInfoRepo() {
-		return userInfoRepo;
-	}
-
-	@Autowired
-	public void setUserInfoRepo(UserInfoRepo userInfoRepo) {
-		this.userInfoRepo = userInfoRepo;
-	}
-
-	public UserInfoMapper getUserInfoMapper() {
-		return userInfoMapper;
-	}
-
-	@Autowired
-	public void setUserInfoMapper(UserInfoMapper userInfoMapper) {
-		this.userInfoMapper = userInfoMapper;
 	}
 
 }

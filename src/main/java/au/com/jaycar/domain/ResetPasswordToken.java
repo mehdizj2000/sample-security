@@ -15,8 +15,8 @@ import lombok.Data;
 @Data
 @Entity
 public class ResetPasswordToken {
-	
-	private static final int EXPIRATION = 15;
+
+	private static final int EXPIRATION = 5;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,12 +28,12 @@ public class ResetPasswordToken {
 	private UserInfo userInfo;
 
 	private ZonedDateTime expiryDate;
-	
+
 	@PrePersist
 	void preCreate() {
-		
+
 		expiryDate = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC")).plusMinutes(EXPIRATION);
-		
+
 	}
 
 }

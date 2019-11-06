@@ -4,13 +4,12 @@ import org.springframework.context.ApplicationEvent;
 
 import au.com.jaycar.domain.UserInfo;
 
-
 public class ResetPasswordEvent extends ApplicationEvent {
-	
+
 	private static final long serialVersionUID = -6364809282303490598L;
 
 	private String url;
-	
+
 	private UserInfo userInfo;
 
 	public ResetPasswordEvent(UserInfo userInfo, String url) {
@@ -23,18 +22,16 @@ public class ResetPasswordEvent extends ApplicationEvent {
 		return url;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
 	public UserInfo getUserInfo() {
 		return userInfo;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public void setUserInfo(UserInfo userInfo) {
 		this.userInfo = userInfo;
 	}
-	
-	
 
 }

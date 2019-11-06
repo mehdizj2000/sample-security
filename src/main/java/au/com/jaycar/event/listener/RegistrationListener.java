@@ -20,6 +20,14 @@ public class RegistrationListener implements ApplicationListener<RegistrationEve
 
 	private JavaMailSender mailSender;
 
+	public JavaMailSender getMailSender() {
+		return mailSender;
+	}
+
+	public TokenBusiness<VerificationToken> getVerificationTokenBusiness() {
+		return verificationTokenBusiness;
+	}
+
 	@Override
 	public void onApplicationEvent(RegistrationEvent event) {
 
@@ -41,17 +49,9 @@ public class RegistrationListener implements ApplicationListener<RegistrationEve
 		mailSender.send(mailMessage);
 	}
 
-	public JavaMailSender getMailSender() {
-		return mailSender;
-	}
-
 	@Autowired
 	public void setMailSender(JavaMailSender mailSender) {
 		this.mailSender = mailSender;
-	}
-
-	public TokenBusiness<VerificationToken> getVerificationTokenBusiness() {
-		return verificationTokenBusiness;
 	}
 
 	@Autowired

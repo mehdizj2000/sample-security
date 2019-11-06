@@ -34,12 +34,6 @@ public class UserInfoRepoTest {
 	private UserInfoMapper userInfoMapper;
 
 	@Test
-	public void findAllUsersTest() {
-		List<UserInfo> infos = userInfoRepo.findAll();
-		assertNotNull(infos);
-	}
-
-	@Test
 	public void findAllUsersAndSaveTest() {
 
 		List<UserInfo> infos = new ArrayList<UserInfo>();
@@ -59,6 +53,12 @@ public class UserInfoRepoTest {
 	}
 
 	@Test
+	public void findAllUsersTest() {
+		List<UserInfo> infos = userInfoRepo.findAll();
+		assertNotNull(infos);
+	}
+
+	@Test
 	public void savePartialUserTest() {
 		Optional<UserInfo> userInfo = userInfoRepo.findByEmail("IoOFrdyv@shaga.com");
 		if (userInfo.isPresent()) {
@@ -72,6 +72,12 @@ public class UserInfoRepoTest {
 			log.info("UserInfo savedInfo: {}", savedInfo);
 		}
 
+	}
+
+	@Test
+	@Ignore
+	public void testFindByUserName() {
+		fail("Not yet implemented");
 	}
 
 	@Test
@@ -99,19 +105,13 @@ public class UserInfoRepoTest {
 			info2.setUserEnabled(info.getUserEnabled());
 		if (info.getPassword() != null)
 			info2.setPassword(info.getPassword());
-		if(info.getUserName() != null)
+		if (info.getUserName() != null)
 			info2.setUserName(info.getUserName());
 
 		UserInfo piyaz = userInfoRepo.save(info2);
 
 		System.out.println(piyaz);
 
-	}
-
-	@Test
-	@Ignore
-	public void testFindByUserName() {
-		fail("Not yet implemented");
 	}
 
 }

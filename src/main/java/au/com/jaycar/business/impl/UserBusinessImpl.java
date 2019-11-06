@@ -11,6 +11,8 @@ import au.com.jaycar.business.UserBusiness;
 import au.com.jaycar.domain.UserInfo;
 import au.com.jaycar.dto.UserDetailsDto;
 import au.com.jaycar.event.RegistrationEvent;
+import au.com.jaycar.event.ResetPasswordEvent;
+import au.com.jaycar.exception.GeneralBusinessException;
 import au.com.jaycar.mapper.UserInfoMapper;
 import au.com.jaycar.repo.UserInfoRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +24,32 @@ public class UserBusinessImpl implements UserBusiness {
 	private UserInfoRepo userInfoRepo;
 
 	private UserInfoMapper userInfoMapper;
-	
+
 	private ApplicationEventPublisher eventPublisher;
+
+	@Override
+	public void deleteUser(final Long id) {
+		getUserInfoRepo().deleteById(id);
+	}
+
+	@Override
+	public UserDetailsDto findUser(final Long id) {
+		Optional<UserInfo> optionalUserInfo = getUserInfoRepo().findById(id);
+		UserInfo userInfo = optionalUserInfo.orElseThrow(RuntimeException::new);
+		return getUserInfoMapper().toUserDto(userInfo);
+	}
+
+	public ApplicationEventPublisher getEventPublisher() {
+		return eventPublisher;
+	}
+
+	public UserInfoMapper getUserInfoMapper() {
+		return userInfoMapper;
+	}
+
+	public UserInfoRepo getUserInfoRepo() {
+		return userInfoRepo;
+	}
 
 	@Override
 	public List<UserDetailsDto> listAllUsers() {
@@ -34,15 +60,16 @@ public class UserBusinessImpl implements UserBusiness {
 	}
 
 	@Override
-	public UserDetailsDto findUser(final Long id) {
-		Optional<UserInfo> optionalUserInfo = getUserInfoRepo().findById(id);
-		UserInfo userInfo = optionalUserInfo.orElseThrow(RuntimeException::new);
-		return getUserInfoMapper().toUserDto(userInfo);
-	}
+	public UserDetailsDto updateUserReq(long id, String email) {
+		Optional<UserInfo> userInfoOpt = userInfoRepo.findById(id);
+		UserInfo userInfo = userInfoOpt.orElseThrow(GeneralBusinessException::new);
+		if (!userInfo.getEmail().contentEquals(email))
+			throw new GeneralBusinessException();
 
-	@Override
-	public void deleteUser(final Long id) {
-		getUserInfoRepo().deleteById(id);
+		String url = "http://127.0.0.1:8992";
+		eventPublisher.publishEvent(new ResetPasswordEvent(userInfo, url));
+
+		return userInfoMapper.toUserDto(userInfo);
 	}
 
 	@Override
@@ -71,17 +98,9 @@ public class UserBusinessImpl implements UserBusiness {
 		}
 	}
 
-	public UserInfoRepo getUserInfoRepo() {
-		return userInfoRepo;
-	}
-
 	@Autowired
-	public void setUserInfoRepo(UserInfoRepo userInfoRepo) {
-		this.userInfoRepo = userInfoRepo;
-	}
-
-	public UserInfoMapper getUserInfoMapper() {
-		return userInfoMapper;
+	public void setEventPublisher(ApplicationEventPublisher eventPublisher) {
+		this.eventPublisher = eventPublisher;
 	}
 
 	@Autowired
@@ -89,14 +108,9 @@ public class UserBusinessImpl implements UserBusiness {
 		this.userInfoMapper = userInfoMapper;
 	}
 
-	public ApplicationEventPublisher getEventPublisher() {
-		return eventPublisher;
-	}
-
 	@Autowired
-	public void setEventPublisher(ApplicationEventPublisher eventPublisher) {
-		this.eventPublisher = eventPublisher;
+	public void setUserInfoRepo(UserInfoRepo userInfoRepo) {
+		this.userInfoRepo = userInfoRepo;
 	}
-
 
 }
