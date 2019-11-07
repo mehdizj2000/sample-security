@@ -38,7 +38,7 @@ public class ResetPasswordListener implements ApplicationListener<ResetPasswordE
 
 		String url = event.getUrl();
 
-		url += "/users/password/reset/confirm/" + resetPasswordToken.getToken();
+		url += "/users/modify/confirm/" + resetPasswordToken.getToken();
 
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
 		mailMessage.setTo(userInfo.getEmail());

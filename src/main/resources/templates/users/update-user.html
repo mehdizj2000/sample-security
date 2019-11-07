@@ -10,7 +10,7 @@
 	<h1 layout:fragment="header">User Details</h1>
 	<div layout:fragment="content" class="container">
 
-		<form id="updateForm" th:action="@{/modify/request/__${user.id}__}"
+		<form id="updateForm" th:action="@{/users/modify/request/__${user.id}__}"
 			action="#" method="post">
 			<div class="pull-right">
 				<a th:href="@{/users/list}" href="list.html"> Users </a>

@@ -46,6 +46,7 @@ public class ResetPasswordTokenBusinessImpl implements TokenBusiness<ResetPasswo
 		return userInfoRepo;
 	}
 
+	@Autowired
 	public void setResetPasswordTokenRepo(ResetPasswordTokenRepo resetPasswordTokenRepo) {
 		this.resetPasswordTokenRepo = resetPasswordTokenRepo;
 	}

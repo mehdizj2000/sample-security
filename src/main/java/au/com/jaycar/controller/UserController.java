@@ -18,11 +18,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import au.com.jaycar.business.TokenBusiness;
 import au.com.jaycar.business.UserBusiness;
-import au.com.jaycar.business.impl.ResetPasswordTokenBusinessImpl;
 import au.com.jaycar.domain.ResetPasswordToken;
 import au.com.jaycar.domain.VerificationToken;
 import au.com.jaycar.dto.UserDetailsDto;
-import au.com.jaycar.exception.GeneralBusinessException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,7 +31,7 @@ public class UserController {
 	private UserBusiness userBusiness;
 
 	private TokenBusiness<VerificationToken> verificationTokenBusiness;
-	
+
 	private TokenBusiness<ResetPasswordToken> resetPasswordTokenBusiness;
 
 	@PostMapping("/save")
@@ -75,20 +73,27 @@ public class UserController {
 		model.addAttribute("users", detailsDtos);
 		return "users/list";
 	}
-	
+
 	@GetMapping("/modify/{id}")
 	public String modifyUser(@PathVariable Long id, Model model) {
 		UserDetailsDto detailsDto = getUserBusiness().findUser(id);
 		model.addAttribute("user", detailsDto);
 		return "users/update-user";
 	}
-	
+
 	@PostMapping("/modify/request/{id}")
-	public String requestModifyUser(@PathVariable Long id, @RequestParam String email, Model model) {
+	public String requestModifyUser(@PathVariable Long id, @RequestParam("email") String email, Model model) {
 		UserDetailsDto detailsDto = userBusiness.updateUserReq(id, email);
 		model.addAttribute("user", detailsDto);
-		
+
 		return "users/update-user";
+	}
+
+	@GetMapping("/modify/confirm/{token}")
+	public String confirmModifyUser(@PathVariable String token, Model model) {
+		UserDetailsDto detailsDto = resetPasswordTokenBusiness.verifyToken(token);
+		model.addAttribute("user", detailsDto);
+		return "users/userform";
 	}
 
 	@GetMapping("/new")
@@ -107,6 +112,13 @@ public class UserController {
 		return "users/userform";
 	}
 
+	@GetMapping("/{id}")
+	public String userDetails(@PathVariable(name = "id") Long id, Model model) {
+		UserDetailsDto detailsDto = getUserBusiness().findUser(id);
+		model.addAttribute("user", detailsDto);
+		return "users/view";
+	}
+
 	@Autowired
 	public void setUserBusiness(UserBusiness userBusiness) {
 		this.userBusiness = userBusiness;
@@ -115,13 +127,6 @@ public class UserController {
 	@Autowired
 	public void setVerificationTokenBusiness(TokenBusiness<VerificationToken> verificationTokenBusiness) {
 		this.verificationTokenBusiness = verificationTokenBusiness;
-	}
-
-	@GetMapping("/{id}")
-	public String userDetails(@PathVariable(name = "id") Long id, Model model) {
-		UserDetailsDto detailsDto = getUserBusiness().findUser(id);
-		model.addAttribute("user", detailsDto);
-		return "users/view";
 	}
 
 	public TokenBusiness<ResetPasswordToken> getResetPasswordTokenBusiness() {
