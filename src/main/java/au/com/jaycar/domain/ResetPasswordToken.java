@@ -3,6 +3,7 @@ package au.com.jaycar.domain;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,7 +25,7 @@ public class ResetPasswordToken {
 
 	private String token;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private UserInfo userInfo;
 
 	private ZonedDateTime expiryDate;

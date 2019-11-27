@@ -13,7 +13,7 @@ public interface UserBusiness {
 	List<UserDetailsDto> listAllUsers();
 
 	UserDetailsDto saveUser(UserDetailsDto user);
-	
+
 	UserDetailsDto updateUserReq(long id, String email);
 
 }

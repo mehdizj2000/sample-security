@@ -3,6 +3,8 @@ package au.com.jaycar.business.impl;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,7 @@ import au.com.jaycar.event.ResetPasswordEvent;
 import au.com.jaycar.exception.GeneralBusinessException;
 import au.com.jaycar.mapper.UserInfoMapper;
 import au.com.jaycar.repo.UserInfoRepo;
+import au.com.jaycar.repo.VerificationTokenRepo;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -26,10 +29,13 @@ public class UserBusinessImpl implements UserBusiness {
 	private UserInfoMapper userInfoMapper;
 
 	private ApplicationEventPublisher eventPublisher;
+	
+	private VerificationTokenRepo verificationTokenRepo; 
 
 	@Override
+	@Transactional
 	public void deleteUser(final Long id) {
-		getUserInfoRepo().deleteById(id);
+		userInfoRepo.deleteById(id);
 	}
 
 	@Override
@@ -49,6 +55,10 @@ public class UserBusinessImpl implements UserBusiness {
 
 	public UserInfoRepo getUserInfoRepo() {
 		return userInfoRepo;
+	}
+
+	public VerificationTokenRepo getVerificationTokenRepo() {
+		return verificationTokenRepo;
 	}
 
 	@Override
@@ -111,6 +121,11 @@ public class UserBusinessImpl implements UserBusiness {
 	@Autowired
 	public void setUserInfoRepo(UserInfoRepo userInfoRepo) {
 		this.userInfoRepo = userInfoRepo;
+	}
+
+	@Autowired
+	public void setVerificationTokenRepo(VerificationTokenRepo verificationTokenRepo) {
+		this.verificationTokenRepo = verificationTokenRepo;
 	}
 
 }

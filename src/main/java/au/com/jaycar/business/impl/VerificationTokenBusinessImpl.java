@@ -77,6 +77,8 @@ public class VerificationTokenBusinessImpl implements TokenBusiness<Verification
 			UserInfo userInfo = verificationToken.getUserInfo();
 
 			userInfo.setUserEnabled(Boolean.TRUE);
+			
+			verificationTokenRepo.delete(verificationToken);;
 
 			return userInfoMapper.toUserDto(userInfoRepo.save(userInfo));
 

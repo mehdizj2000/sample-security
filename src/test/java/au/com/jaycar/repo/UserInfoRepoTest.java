@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.Matchers;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import au.com.jaycar.domain.UserInfo;
+import au.com.jaycar.domain.VerificationToken;
 import au.com.jaycar.dto.UserDetailsDto;
 import au.com.jaycar.mapper.UserInfoMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +31,37 @@ public class UserInfoRepoTest {
 
 	@Autowired
 	private UserInfoRepo userInfoRepo;
+	
+	@Autowired
+	private VerificationTokenRepo verificationTokenRepo;
 
 	@Autowired
 	private UserInfoMapper userInfoMapper;
+	
+	
+	@Test
+	public void tokenUserInfoTest() {
+		UserInfo userInfo = new UserInfo();
+		userInfo.setEmail("shafal@yahoo.com");
+		userInfo.setUserName("ghazanfar");
+
+		UserInfo info = userInfoRepo.save(userInfo);
+
+		VerificationToken token = new VerificationToken();
+		token.setToken(UUID.randomUUID().toString());
+		token.setUserInfo(info);
+
+		VerificationToken verificationToken = verificationTokenRepo.save(token);
+
+		assertNotNull(verificationToken);
+
+		log.info(">>>>>>>>>>>>>>>>>>>> {}", verificationToken);
+
+		verificationTokenRepo.findById(1L).ifPresent(vt -> {
+			verificationTokenRepo.delete(vt);
+		});
+		
+	}
 
 	@Test
 	public void findAllUsersAndSaveTest() {
