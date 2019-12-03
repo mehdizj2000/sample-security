@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import au.com.jaycar.business.UserBusiness;
@@ -29,8 +30,10 @@ public class UserBusinessImpl implements UserBusiness {
 	private UserInfoMapper userInfoMapper;
 
 	private ApplicationEventPublisher eventPublisher;
-	
-	private VerificationTokenRepo verificationTokenRepo; 
+
+	private VerificationTokenRepo verificationTokenRepo;
+
+	private PasswordEncoder passwordEncoder;
 
 	@Override
 	@Transactional
@@ -93,7 +96,7 @@ public class UserBusinessImpl implements UserBusiness {
 			if (userInfo2.getUserEnabled() != null)
 				userInfo.setUserEnabled(userInfo2.getUserEnabled());
 			if (userInfo2.getPassword() != null)
-				userInfo.setPassword(userInfo2.getPassword());
+				userInfo.setPassword(passwordEncoder.encode(userInfo2.getPassword()));
 			if (userInfo2.getUserName() != null)
 				userInfo.setUserName(userInfo2.getUserName());
 			UserInfo info = getUserInfoRepo().save(userInfo);
@@ -101,6 +104,7 @@ public class UserBusinessImpl implements UserBusiness {
 		} else {
 			UserInfo userInfo2 = getUserInfoMapper().toUserEntity(user);
 
+			userInfo2.setPassword(passwordEncoder.encode(userInfo2.getPassword()));
 			UserInfo info = getUserInfoRepo().save(userInfo2);
 			String url = "http://127.0.0.1:8992";
 			eventPublisher.publishEvent(new RegistrationEvent(info, url));
@@ -126,6 +130,15 @@ public class UserBusinessImpl implements UserBusiness {
 	@Autowired
 	public void setVerificationTokenRepo(VerificationTokenRepo verificationTokenRepo) {
 		this.verificationTokenRepo = verificationTokenRepo;
+	}
+
+	public PasswordEncoder getPasswordEncoder() {
+		return passwordEncoder;
+	}
+
+	@Autowired
+	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+		this.passwordEncoder = passwordEncoder;
 	}
 
 }

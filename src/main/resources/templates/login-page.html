@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Log in</title>
+
+<script type="text/javascript"
+	th:src="@{/webjars/jquery/1.11.1/jquery.js}"></script>
+<script type="text/javascript"
+	th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.js}"></script>
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.css}">
+</head>
+<body>
+	<div class="container">
+		<h1>Log in</h1>
+
+		<div th:if="${param.error}" class="alert alert-danger">invalid Username or Password</div>
+		
+		<div th:if="${param.logout}" class="alert alert-danger">You have been logged out</div>
+
+		<form th:action="@{/logmein}" method="post" class="form-horizontal">
+
+			<div class="form-group">
+				<label class="control-label col-xs-2" for="username">User
+					Name:</label>
+
+				<div class="col-xs-10">
+					<input type="text" name="username" />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label col-xs-2" for="password">Password:
+				</label>
+
+				<div class="col-xs-10">
+					<input type="password" name="password" />
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-xs-2" for="remember">Remember Me?
+				</label>
+
+				<div class="col-xs-10">
+					<input id="remember" type="checkbox" name="remember-me" value="true" />
+				</div>
+			</div>
+			
+			<div class="form-actions col-xs-offset-2 col-xs-10">
+				<input type="submit" class="btn btn-primary" value="Signe In">
+				<a class="btn btn-default" th:href="@{/users/new}">Sign Up</a>
+			</div>
+			
+		</form>
+	</div>
+</body>
+</html>

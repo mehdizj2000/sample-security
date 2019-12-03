@@ -3,11 +3,11 @@ package au.com.jaycar.domain;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 
@@ -25,7 +25,8 @@ public class ResetPasswordToken {
 
 	private String token;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
+	@JoinColumn(name = "fk_user_id")
 	private UserInfo userInfo;
 
 	private ZonedDateTime expiryDate;

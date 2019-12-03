@@ -10,5 +10,10 @@ public class HomeController {
 	public String home() {
 		return "redirect:/users/list";
 	}
+	
+	@GetMapping("/login")
+	public String login() {
+		return "login-page";
+	}
 
 }

@@ -78,6 +78,8 @@ public class ResetPasswordTokenBusinessImpl implements TokenBusiness<ResetPasswo
 
 			userInfo.setUserEnabled(Boolean.TRUE);
 
+			resetPasswordTokenRepo.delete(resetPasswordToken);
+
 			return userInfoMapper.toUserDto(userInfoRepo.save(userInfo));
 
 		} else
